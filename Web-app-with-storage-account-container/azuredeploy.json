@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "StorageAccountName": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 24,
+            "metadata": {
+                "description": "Enter the storage account name"
+            }
+        },
+        "AppServicePlan": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter the App service plan name"
+            }
+        },
+        "WebAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter the web app name"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[toLower(parameters('StorageAccountName'))]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-04-01",
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "standard_LRS",
+                "tier": "Premium"
+            }
+        },
+        {
+            "name": "[concat(parameters('StorageAccountName'),'/default/container')]",
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2021-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('StorageAccountName')))]"
+            ],
+            "properties": {
+                "publicAccess": "None"
+            }
+        },
+            {
+            "name": "[parameters('AppServicePlan')]",
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2020-12-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "F1",
+                "capacity": 1
+            },
+            "properties": {
+                "name": "[parameters('AppServicePlan')]"
+            }
+        },
+        {
+            "name": "[parameters('WebAppName')]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-12-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('AppServicePlan'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('StorageAccountName')))]"
+            ],
+            "properties": {
+                "name": "[parameters('WebAppName')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms',parameters('AppServicePlan'))]"
+            }
+        }
+    ],
+    "outputs": {}
+}
