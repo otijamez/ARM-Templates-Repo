@@ -1,0 +1,7 @@
+    "parameters": {
+        "NumberOfInstances": {
+            "type": "int",
+            "minValue": 1,
+            "maxValue": 5
+        }
+    }
