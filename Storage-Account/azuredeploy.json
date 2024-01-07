@@ -35,14 +35,14 @@
             }
         },
  {
-    "name": "toLower(parameters('storageName')/default/Container-1",
+    "name": "[concat(parameters('storageName'), '/default/container-1')]",
     "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
     "apiVersion": "2023-01-01",
     "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('storageName')))]"
     ],
     "properties": {
-        "publicAccess": "Blob"
+        "publicAccess": "None"
     }
  }
     ],   
