@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NumberOfInstances": {
+            "type": "int",
+            "minValue": 1,
+            "maxValue": 5
+        }
+    },
+    "variables":{
+        "vnetname1": "Vnet"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(variables('vnetname1'),'-',copyIndex(1))]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "vnetcopy",
+                "count": "[parameters('NumberOfInstances')]"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]        
+                },
+                "subnets": [
+                    {
+                        "name": "Subnet-1",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24"
+                        }
+                    }
+                ]
+            }
+        }
+    ]  
+}
