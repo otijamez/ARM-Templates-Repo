@@ -1,0 +1,29 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "allowedValues": [
+                "east us",
+                "west us",
+                "central us"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "location of resource"
+            }
+        },
+        "vnetname": {
+            "type": "String",
+            "metadata": {
+                "description": "vnet name"
+            }
+        },
+        "Nsgname": {
+            "type": "String",
+            "metadata": {
+                "description": "name of nsg"
+            }
+        }
+    }
+}
