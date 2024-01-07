@@ -1,4 +1,4 @@
-##   A simple windows or Linux virtual machine copy deployment
+##   A simple windows and Linux virtual machine copy deployment
 
 Deploy a simple Windows or Linux virtual machine copy to Azure. This template also deploys a
 Virtual Network,
