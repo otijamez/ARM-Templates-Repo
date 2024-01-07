@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AppServicePlan": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter the App service plan name"
+            }
+        },
+        "WebAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter the web app name"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+            {
+            "name": "[parameters('AppServicePlan')]",
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2020-12-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "F1",
+                "capacity": 1
+            },
+            "properties": {
+                "name": "[parameters('AppServicePlan')]"
+            }
+        },
+        {
+            "name": "[parameters('WebAppName')]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-12-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('AppServicePlan'))]"
+            ],
+            "properties": {
+                "name": "[parameters('WebAppName')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms',parameters('AppServicePlan'))]"
+            }
+        }
+    ],
+    "outputs": {}
+}
