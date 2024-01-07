@@ -1,0 +1,20 @@
+    "parameters": {
+        "StorageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter the storage account name"
+            }
+        },
+        "AdminUserName": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter the username"
+            }
+        },
+        "AdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Enter the password"
+            }
+        }
+    }
