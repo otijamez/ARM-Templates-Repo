@@ -51,13 +51,6 @@
             "metadata": {
                 "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
             }
-        },
-        "vmSize": {
-            "defaultValue": "Standard_A1_v2",
-            "type": "String",
-            "metadata": {
-                "description": "description"
-            }
         }
     },
     "variables": {
@@ -84,7 +77,7 @@
                 "version": "latest"
             }
         },
-        "networkSecurityGroupName": "default-NSG",
+        "networkSecurityGroupName": "NSG",
         "nsgOsPort": {
             "Ubuntu": "22",
             "Windows": "3389"
@@ -105,7 +98,7 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2020-11-01",
-            "name": "[concat('twistpip','-',copyIndex(5))]",
+            "name": "[concat('PIP','-',copyIndex(1))]",
             "location": "[resourceGroup().location]",
             "tags": {
                 "displayName": "publicIPAddress1"
@@ -121,7 +114,7 @@
         {
             "type": "Microsoft.Compute/availabilitySets",
             "apiVersion": "2020-06-01",
-            "name": "[concat(variables('availabilitySetName'), '-', copyIndex())]",
+            "name": "[concat(variables('availabilitySetName'), '-', copyIndex(1))]",
             "location": "[parameters('location')]",
             "sku": {
                 "name": "Aligned"
@@ -197,11 +190,11 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2020-05-01",
-            "name": "[concat('nic', copyindex())]",
+            "name": "[concat('NIC', copyindex(1))]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[variables('virtualNetworkName')]",
-                "[resourceId('Microsoft.Network/publicIPAddresses', concat('twistpip','-',copyIndex(5)))]"
+                "[resourceId('Microsoft.Network/publicIPAddresses', concat('PIP','-',copyIndex(1)))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -210,7 +203,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat('twistpip','-',copyIndex(5)))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat('PIP','-',copyIndex(1)))]"
                             },
                             "subnet": {
                                 "id": "[if(equals(mod(copyIndex(), 2),0), variables('subnet1Ref'), variables('subnet2Ref'))]"
@@ -227,10 +220,10 @@
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2020-06-01",
-            "name": "[concat('myvm', copyIndex())]",
+            "name": "[concat('VM','-', copyIndex(1))]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', concat('nic', copyIndex()))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', concat('NIC', copyIndex(1)))]",
                 "asLoop"
             ],
             "properties": {
@@ -238,7 +231,7 @@
                     "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('availabilitySetName'), '-', mod(copyIndex(),2)))]"
                 },
                 "hardwareProfile": {
-                    "vmSize": "[parameters('vmSize')]"
+                    "vmSize": "Standard_DS1_v2"
                 },
                 "osProfile": {
                     "computerName": "[concat('vm', copyIndex())]",
@@ -255,7 +248,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic', copyindex()))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('NIC', copyindex(1)))]"
                         }
                     ]
                 }
