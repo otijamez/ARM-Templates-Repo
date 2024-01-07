@@ -1,0 +1,59 @@
+    "parameters": {
+        "adminUsername": {
+            "type": "String",
+            "metadata": {
+                "description": "Admin username for VM"
+            }
+        },
+        "numberOfInstances": {
+            "defaultValue": 4,
+            "minValue": 2,
+            "maxValue": 398,
+            "type": "Int",
+            "metadata": {
+                "description": "Number of VMs to deploy, limit 398 since there is an 800 resource limit for a single template deployment"
+            }
+        },
+        "OS": {
+            "defaultValue": "Windows",
+            "allowedValues": [
+                "Windows",
+                "Ubuntu"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "OS Platform for the VM"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "authenticationType": {
+            "defaultValue": "sshPublicKey",
+            "allowedValues": [
+                "sshPublicKey",
+                "password"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+            }
+        },
+        "adminPasswordOrKey": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+            }
+        },
+        "vmSize": {
+            "defaultValue": "Standard_A1_v2",
+            "type": "String",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    }
