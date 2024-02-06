@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "type": "string",
+            "maxLength": 25
+        },
+        "storageName": {
+            "type": "string",
+            "maxLength": 25
+        },
+        "adminUsername": {
+            "type": "string"
+        },
+        "adminPassword": {
+            "type": "securestring"
+        },
+        "NoOfInstances": {
+            "type": "int",
+            "defaultValue": 1,
+            "maxValue": 10
+        }
+    }
+}
