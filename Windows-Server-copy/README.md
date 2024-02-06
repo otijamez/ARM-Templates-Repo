@@ -1,6 +1,6 @@
-##   Simple windows server 2012 virtual machine copy
+##   Simple windows server 2012 virtual machine COPY
 
-Deploy a simple windows server 2012 virtual machine copy to Azure. This template also deploys a
+Deploy a simple windows server 2012 virtual machine COPY to Azure. This template also deploys a
 Virtual Network,
 Storage Account,
 Network Security Group (NSG),
