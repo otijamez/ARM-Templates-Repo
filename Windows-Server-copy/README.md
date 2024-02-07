@@ -4,6 +4,7 @@ Deploy a simple windows server 2012 virtual machine COPY to Azure. This template
 Virtual Network,
 Storage Account,
 Network Security Group (NSG),
+Availability set,
 OS Disk,
 Public IP,
 and a Network Interface Card (NIC).
