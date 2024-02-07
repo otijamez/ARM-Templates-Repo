@@ -32,7 +32,7 @@
         "subnet1Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'),variables('subnetname2'))]",
         "subnet2Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'),variables('subnetName1'))]"
     },
-    "resources": [ 
+    "resources": [
         {
             "name": "[toLower(concat(parameters('storageName'),uniqueString(resourceGroup().id)))]",
             "type": "Microsoft.Storage/storageAccounts",
@@ -41,7 +41,10 @@
             "sku": {
                 "name": "Standard_LRS"
             },
-            "kind": "StorageV2"
+            "kind": "StorageV2",
+            "properties": {
+                "allowBlobPublicAccess": true
+            }
         },
         {
             "name": "[concat('pip',copyIndex(1))]",
@@ -49,13 +52,13 @@
             "apiVersion": "2023-04-01",
             "location": "[resourceGroup().location]",
             "properties": {
-                "publicIPAllocationMethod": "Static"
+                "publicIPAllocationMethod": "Dynamic"
             },
             "copy": {
                 "name": "pip-copy",
                 "count": "[parameters('NoOfInstances')]"
             }
-        },
+        }, 
         {
             "name": "NSG",
             "type": "Microsoft.Network/networkSecurityGroups",
@@ -64,7 +67,7 @@
             "properties": {
                 "securityRules": [
                     {
-                        "name": "nsgRule1",
+                        "name": "allow-HTTPs",
                         "properties": {
                             "description": "description",
                             "protocol": "Tcp",
@@ -79,7 +82,7 @@
                     }
                 ]
             }
-        },
+        }, 
         {
             "name": "[variables('virtualNetworkName')]",
             "type": "Microsoft.Network/virtualNetworks",
@@ -115,8 +118,21 @@
                     }
                 ]
             }
+        }, 
+        { 
+            "name": "ASET",
+            "type": "Microsoft.Compute/availabilitySets",
+            "apiVersion": "2023-03-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Aligned"
+            },
+            "properties": {
+                "platformFaultDomainCount": 3,
+                "platformUpdateDomainCount": 10
+            }
         },
-        {
+        { 
             "name": "[concat('NIC',copyIndex(1))]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2023-04-01",
@@ -160,6 +176,9 @@
                 "count": "[parameters('NoOfInstances')]"
             },
             "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets','ASET')]"
+                },
                 "hardwareProfile": {
                     "vmSize": "Standard_DS1_v2"
                 },
@@ -176,7 +195,6 @@
                         "version": "latest"
                     }, 
                     "osDisk": {
-                        "name": "[concat('OSDisk','-',copyIndex(1))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     } 
@@ -194,7 +212,7 @@
                         "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts',toLower(concat(parameters('storageName'),uniqueString(resourceGroup().id))))).primaryEndpoints.Blob]"
                     }
                 } 
-            }
+            } 
         }
     ]
 }
